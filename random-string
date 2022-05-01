@@ -1,0 +1,28 @@
+#!/bin/bash
+
+SUBSTR_LEN=32
+PASSED_IN=0
+if [[ $# -gt 0 ]]; then
+	SUBSTR_LEN=$1
+	PASSED_IN=1
+fi
+SUBSTR_LEN=$(echo -n "$SUBSTR_LEN" | sed -E 's|[^0-9]+||g')
+if [[ -z "$SUBSTR_LEN" ]]; then
+	if [[ $PASSED_IN -eq 0 ]]; then
+		SUBSTR_LEN=32
+	else
+		echo "Invalid LENGTH specified"
+		exit 1
+	fi
+fi
+echo -n $SUBSTR_LEN | grep -E '^[0-9]{1,}$' > /dev/null
+if [[ $? -ne 0 ]]; then
+	echo "Invalid LENGTH specified"
+	exit 2
+fi
+BUFFER=
+while [[ $(echo -n $BUFFER | wc -c) -lt $SUBSTR_LEN ]]; do
+	M=$(dd if=/dev/urandom count=1 bs=$SUBSTR_LEN 2>/dev/null | strings | tr -d "\n\t ");
+	BUFFER="${BUFFER}${M}"
+done
+echo -n ${BUFFER:0:$SUBSTR_LEN}

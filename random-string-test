@@ -1,0 +1,46 @@
+#!/bin/bash
+
+TEST_COUNT=100
+function test-string-lengths(){
+	FAILED=0
+	REQUESTED_SIZE=$1
+	if [[ $# -gt 1 ]]; then
+		echo -n $2 | grep -E '^[0-9]{1,}$' > /dev/null
+		if [[ $? -eq 0 ]]; then
+			TEST_COUNT=$2
+		else
+			echo -n "[ERROR]: second parameter must be a valid integer or nothing to use the default of $TEST_COUNT"
+			echo
+			return 1
+		fi
+	fi
+	echo "=========================================================="
+	echo "| Running test for random strings of size: $REQUESTED_SIZE"
+	echo "----------------------------------------------------------"
+	echo "[STATUS]:      RUNNING"
+	for i in $(seq 1 $TEST_COUNT); do
+		SIZE=$(./random-string $REQUESTED_SIZE | wc -c);
+		if [[ $SIZE -ne $REQUESTED_SIZE ]]; then
+			echo -n '[FAILED]:      Failed to generate size of ' "$REQUESTED_SIZE"
+			echo
+			FAILED=1
+		fi
+	done
+	if [[ $FAILED -eq 1 ]]; then
+		echo -n '[FAILED]:      One or more tests failed for random strings of size: ' "$REQUESTED_SIZE"
+		echo 
+	else
+		echo -n '[SUCCESS]: All tests passed for random strings of size: ' "$REQUESTED_SIZE"
+		echo
+	fi
+}
+TEST_COUNT=1000
+
+test-string-lengths 16
+test-string-lengths 32
+test-string-lengths 64
+test-string-lengths 128
+test-string-lengths 255
+test-string-lengths 512
+test-string-lengths 1024
+test-string-lengths 2048
