@@ -22,7 +22,7 @@ if [[ $? -ne 0 ]]; then
 fi
 BUFFER=
 while [[ $(echo -n $BUFFER | wc -c) -lt $SUBSTR_LEN ]]; do
-	M=$(dd if=/dev/urandom count=1 bs=$SUBSTR_LEN 2>/dev/null | strings | tr -d "\n\t ");
+	M=$(dd if=/dev/urandom count=1 bs=$SUBSTR_LEN 2>/dev/null | strings | tr -d "\n\t " 2>/dev/null);
 	BUFFER="${BUFFER}${M}"
 done
 echo -n ${BUFFER:0:$SUBSTR_LEN}

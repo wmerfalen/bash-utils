@@ -27,7 +27,7 @@ all tests.
 ```
 
 # version
-1.0.0  - random-string and random-string-test utility
+1.0.1  - Surpressed tr 'illegal byte sequence' errors
 
 # Author
 William Merfalen https://github.com/wmerfalen
